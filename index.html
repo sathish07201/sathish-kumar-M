@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitBuddy — AI Workout & Nutrition Planner</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-content">
+            <div class="logo">
+                <span class="icon">⚡</span>
+                <span class="brand-text">Fit<span class="highlight">Buddy</span></span>
+            </div>
+            <nav class="nav-links">
+                <a href="/" class="active">Home</a>
+                <a href="/admin/users">Admin Panel 👨‍💻</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container hero-section">
+        <div class="hero-badge">AI-Powered Fitness Engine</div>
+        <h1 class="hero-title">Your Personalized <span class="gradient-text">Workout & Nutrition</span> Plan</h1>
+        <p class="hero-subtitle">Input your physical metrics and fitness goals. Google Gemini AI will engineer a customized 7-day training split and nutrient-calibrated diet chart instantly.</p>
+
+        <div class="card form-card">
+            <form action="/generate" method="post" id="planForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Your Name *</label>
+                        <input type="text" id="name" name="name" placeholder="e.g. Sathish" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age *</label>
+                        <input type="number" id="age" name="age" min="12" max="100" placeholder="19" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="weight">Weight (kg) *</label>
+                        <input type="number" step="0.1" id="weight" name="weight" min="30" max="250" placeholder="83" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" min="100" max="250" placeholder="178">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other / Prefer not to say</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="goal">Primary Goal *</label>
+                        <select id="goal" name="goal" required>
+                            <option value="Muscle Gain">Muscle Gain (Hypertrophy)</option>
+                            <option value="Weight Loss">Weight Loss & Fat Shredding</option>
+                            <option value="Endurance & Stamina">Endurance & Athletic Stamina</option>
+                            <option value="General Fitness">Overall Fitness & Health</option>
+                            <option value="Strength & Power">Strength & Powerlifting</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="intensity">Training Intensity *</label>
+                        <select id="intensity" name="intensity" required>
+                            <option value="Low">Low (Gentle, low impact, beginner)</option>
+                            <option value="Medium" selected>Medium (Moderate exertion, progressive overload)</option>
+                            <option value="High">High (Demanding, athletic, intense)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="diet_preference">Dietary Preference</label>
+                        <select id="diet_preference" name="diet_preference">
+                            <option value="High-Protein Non-Veg">High-Protein Non-Vegetarian</option>
+                            <option value="Vegetarian">Vegetarian (with Dairy/Paneer)</option>
+                            <option value="Eggitarian">Eggitarian (Veg + Eggs)</option>
+                            <option value="Vegan">100% Plant-Based Vegan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="medical_notes">Medical / Joint Notes or Equipment Restrictions</label>
+                    <textarea id="medical_notes" name="medical_notes" rows="2" placeholder="e.g. Mild lower back soreness, home workout with dumbbells only..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary submit-btn">
+                    <span>Generate My Plan with Gemini AI</span> 🚀
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>FitBuddy Academic Project • Built with FastAPI, SQLite, and Google Gemini AI</p>
+    </footer>
+</body>
+</html>

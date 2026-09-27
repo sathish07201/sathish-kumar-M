@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitBuddy Admin — User Records & Plans</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="/" class="logo">
+                <span class="icon">⚡</span>
+                <span class="brand-text">Fit<span class="highlight">Buddy</span> Admin</span>
+            </a>
+            <div class="nav-links">
+                <a href="/">← Back to App</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container admin-container">
+        <div class="admin-header">
+            <div>
+                <h2>All Registered Users & Generated Plans</h2>
+                <p>SQLite Database records: <code>users</code> and <code>workout_plans</code></p>
+            </div>
+            <div class="stat-badge">Total Users: <strong>{{ users | length }}</strong></div>
+        </div>
+
+        <div class="card table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Weight</th>
+                        <th>Goal</th>
+                        <th>Intensity</th>
+                        <th>Plan Status</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>#{{ u.id }}</td>
+                        <td><strong>{{ u.name }}</strong></td>
+                        <td>{{ u.age }} yrs</td>
+                        <td>{{ u.weight }} kg</td>
+                        <td><span class="pill pill-goal">{{ u.goal }}</span></td>
+                        <td><span class="pill pill-intensity">{{ u.intensity }}</span></td>
+                        <td>
+                            {% if plans_by_user.get(u.id) %}
+                                {% if plans_by_user[u.id].updated_plan %}
+                                    <span class="tag-updated">Refined (AI)</span>
+                                {% else %}
+                                    <span class="tag-original">Original</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="tag-none">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ u.created_at.strftime('%Y-%m-%d %H:%M') if u.created_at else 'Recent' }}</td>
+                        <td class="action-cell">
+                            {% if plans_by_user.get(u.id) %}
+                            <a href="/plan/{{ plans_by_user[u.id].id }}" class="btn btn-sm btn-view">View Plan</a>
+                            {% endif %}
+                            <form action="/admin/delete/{{ u.id }}" method="post" style="display:inline;" onsubmit="return confirm('Delete user {{ u.name }}?');">
+                                <button type="submit" class="btn btn-sm btn-del">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem;">No users created yet. <a href="/">Create the first plan</a>!</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

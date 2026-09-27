@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitBuddy — Generated Plan for {{ user.name }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="/" class="logo">
+                <span class="icon">⚡</span>
+                <span class="brand-text">Fit<span class="highlight">Buddy</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="/">← New Plan</a>
+                <a href="/admin/users">Admin Panel 👨‍💻</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container result-page">
+        {% if is_updated %}
+        <div class="alert alert-success">
+            ✨ Plan successfully updated based on your prompt: <strong>"{{ change_notes }}"</strong>
+        </div>
+        {% endif %}
+
+        <div class="user-banner">
+            <div>
+                <h2>Personalized Fitness Blueprint for <span class="highlight">{{ user.name }}</span></h2>
+                <div class="badge-row">
+                    <span class="badge">Goal: {{ user.goal }}</span>
+                    <span class="badge">Intensity: {{ user.intensity }}</span>
+                    <span class="badge">Weight: {{ user.weight }} kg</span>
+                    <span class="badge">Age: {{ user.age }} yrs</span>
+                </div>
+            </div>
+            <button onclick="window.print()" class="btn btn-secondary print-btn">🖨️ Print / Save PDF</button>
+        </div>
+
+        <!-- Macro Summary Cards -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Daily Calories</div>
+                <div class="metric-value">{{ plan.summary.daily_calories }} <span class="unit">kcal</span></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Protein Target</div>
+                <div class="metric-value">{{ plan.summary.protein_g }} <span class="unit">g</span></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Carbohydrates</div>
+                <div class="metric-value">{{ plan.summary.carbs_g }} <span class="unit">g</span></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Healthy Fats</div>
+                <div class="metric-value">{{ plan.summary.fat_g }} <span class="unit">g</span></div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Hydration</div>
+                <div class="metric-value">{{ plan.summary.water_liters }} <span class="unit">L</span></div>
+            </div>
+        </div>
+
+        <!-- Workout Plan Section -->
+        <section class="section-block">
+            <h3 class="section-title">🏋️‍♂️ 7-Day Workout Routine</h3>
+            <p class="section-desc">{{ plan.workout_plan.weekly_overview }}</p>
+
+            <div class="days-container">
+                {% for day in plan.workout_plan.days %}
+                <div class="day-card {% if day.is_rest %}rest-day{% endif %}">
+                    <div class="day-header">
+                        <h4>{{ day.day }} — <span class="day-focus">{{ day.focus }}</span></h4>
+                        {% if day.is_rest %}
+                        <span class="badge-rest">Rest & Recovery</span>
+                        {% endif %}
+                    </div>
+                    {% if day.warmup %}
+                    <p class="warmup-text"><strong>Warmup:</strong> {{ day.warmup }}</p>
+                    {% endif %}
+
+                    {% if day.exercises %}
+                    <table class="exercise-table">
+                        <thead>
+                            <tr>
+                                <th>Exercise</th>
+                                <th>Sets</th>
+                                <th>Reps</th>
+                                <th>Rest</th>
+                                <th>Coach Cues</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ex in day.exercises %}
+                            <tr>
+                                <td class="exercise-name">{{ ex.name }}</td>
+                                <td>{{ ex.sets }}</td>
+                                <td>{{ ex.reps }}</td>
+                                <td>{{ ex.rest }}</td>
+                                <td class="tips-cell">{{ ex.tips }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Nutrition Plan Section -->
+        <section class="section-block">
+            <h3 class="section-title">🥗 Targeted Nutrition & Meal Plan</h3>
+            <div class="meals-grid">
+                {% for meal in plan.nutrition_plan.meals %}
+                <div class="meal-card">
+                    <div class="meal-header">
+                        <h4>{{ meal.meal }}</h4>
+                        <span class="meal-cal">{{ meal.calories }} kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        {% for item in meal.items %}
+                        <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="protein-tag">Protein: {{ meal.protein }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Update Plan Form (Flowchart Step) -->
+        <section class="section-block update-box">
+            <h3>⚡ Want to adjust or customize this plan?</h3>
+            <p>Need home exercises without gym machines? Need vegetarian swap? Ask Gemini to update this plan instantly:</p>
+            <form action="/update-plan/{{ plan_record_id }}" method="post" class="update-form">
+                <input type="text" name="user_modification" placeholder="e.g. 'I don't have dumbbells, please make this home bodyweight only' or 'Replace chicken with paneer'" required>
+                <button type="submit" class="btn btn-primary">Update Plan with AI</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>
